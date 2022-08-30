@@ -36,12 +36,12 @@ crawl(STDLIB_BUILD_ROOT, (file) => {
 
       // @types/three mistakenly exports ReflectorForSSRPass as Reflector
       if (fileName === 'objects/ReflectorForSSRPass') {
-        result = result.replaceAll('ReflectorOptions', 'ReflectorForSSRPassOptions')
+        result = result.replace(/ReflectorOptions/g, 'ReflectorForSSRPassOptions')
         result = result.replace('class Reflector', 'class ReflectorForSSRPass')
       }
 
       if (fileName === 'postprocessing/SSRPass') {
-        result = result.replaceAll(/\bReflector\b/g, 'ReflectorForSSRPass')
+        result = result.replace(/\bReflector\b/g, 'ReflectorForSSRPass')
       }
 
       // three-stdlib exports the class from Water2 as Water2, but three and @types/three export it as Water
@@ -64,7 +64,7 @@ crawl(STDLIB_BUILD_ROOT, (file) => {
 const indexFile = `${STDLIB_BUILD_ROOT}/index.d.ts`
 fs.readFile(indexFile, 'utf8', (err, data) => {
   if (err) throw err
-  const result = data.replaceAll(/export \* from '([./\w]+)';\s+/g, (match, p1) => {
+  const result = data.replace(/export \* from '([./\w]+)';\s+/g, (match, p1) => {
     const declarationFilePath = path.join(STDLIB_BUILD_ROOT, `${p1}.d.ts`)
     if (!fs.existsSync(declarationFilePath)) {
       console.log(`Removing '${p1}' export from index.d.ts`)
